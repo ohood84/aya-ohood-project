@@ -25,32 +25,45 @@ function JobPosting(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDesc
   this.moreJbSkills = moreJbSkills;
 }
 
-function Developers() {
+function Developers(){
   this.devs=[];
 }
 
  Developers.prototype.addDeveloper = function(dev){
   this.devs.push(dev);
+  console.log(dev);
+   console.log(this.devs[0])
 }
 
  Developers.prototype.removeDeveloper = function(dev){
   this.devs.pop(dev);
 }
 
-function Developer(fName,lName,title,hourlyRate,experience,devSkills){
+function Developer(fName,lName,title,hourlyRate,experience){
   this.fName = fName;
   this.lName = lName;
   this.title = title;
   this.hourlyRate = hourlyRate;
   this.experience = experience;
-  this.devSkills = devSkills;
+  this.devSkills = [];
 }
 
-var textInfo = function(dev){ //to print the developer's information
-  $("#app-name").text(dev.fName+" "+dev.lName);
-  $("#app-h").text(dev.hourlyRate);
-  $("#app-position").text(dev.title);
-  $("#print-exp").text(dev.experience);
+var textInfo = function(dev){ //to print the developer's
+ $(".dev-info").append('<div class="alert alert-info">'+
+  '<h5 class="alert-heading"><strong><span id="int-title"></span></strong></h5>'+
+  '<p>Developer name: <span id="app-name">'+dev.fName+" "+dev.lName+'</span></p>'+
+  '<p>skills: <ul><span id="app-skills"></span>'+appSkills+'</ul></p>'+
+  '<p>Hourly Rate: <span id="app-h"></span>'+dev.hourlyRate+'</p>'+
+  '<p>Experience: <span id="print-exp">'+dev.experience+'</span></p>'+
+  '<p>Position: <span id="app-position">'+dev.title+'</span></p>'+
+  '<p>Contact Me</p>'+
+  '</div>');
+   var appSkills="";
+   dev.devSkills.forEach(function(skill){
+       $("#app-skills").append("<li>"+skill+"</li>");
+       appSkills+=("<li>"+skill+"</li>");
+
+     });
 
 }
 
@@ -63,23 +76,24 @@ var reset = function(){
   $("#form-post")[0].reset();
 
 }
-var posting =function(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDescription,moreJbSkills){
-  if (difficulty === "entry"){
+
+var posting =function(post){
+  if (post.difficulty === "entry"){
     // console.log(newPost);
 
     $(".entry-level").append('<div class="entry-level">'+
                             '<div class="alert alert-info">'+
-                            '<h5 class="alert-heading">Job Title:<strong><span id="bg-title">'+jobTitle+'</span></strong></h5>'+
-                            '<p>Company name: <span class="bg-comp-name">'+comName+'</span></p>'+
-                            '<p>Location: <span class="bg-location">'+jobLocation+'</span></p>'+
+                            '<h5 class="alert-heading">Job Title:<strong><span id="bg-title">'+post.title+'</span></strong></h5>'+
+                            '<p>Company name: <span class="bg-comp-name">'+post.companyName+'</span></p>'+
+                            '<p>Location: <span class="bg-location">'+post.location+'</span></p>'+
                             '<p>Skills Required'+
                             '<ul>'+
                             '<span class="bg-skills">'+jbSkillListElement+'</span>'+
                             '</ul>'+
                             '</p>'+
-                            '<p>Additional skills: <span class="bg-add-skills">'+moreJbSkills+'</span></p>'+
-                            '<p>Description: <span class="bg-post-desc">'+jobDescription+'</span></p>'+
-                            '<p>Work condition: <span class="bg-condition">'+jobCondition+'</span></p>'+
+                            '<p>Additional skills: <span class="bg-add-skills">'+post.moreJbSkills+'</span></p>'+
+                            '<p>Description: <span class="bg-post-desc">'+post.description+'</span></p>'+
+                            '<p>Work condition: <span class="bg-condition">'+post.condition+'</span></p>'+
 
 
                             '<div class="flx-btn">'+
@@ -91,21 +105,20 @@ var posting =function(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDe
           // $(".bg-skills").append()
   }
 
-  else if (difficulty === "intermediate"){
+  else if (post.difficulty === "intermediate"){
     $(".int-level").append('<div class="int-level">'+
                           '<div class="alert alert-info">'+
-                          '<h5 class="alert-heading">Job Title:<strong><span id="int-title">'+jobTitle+'</span></strong></h5>'+
-                          '<p>Company name: <span id="int-comp-name">'+comName+'</span></p>'+
-                          '<p>Location: <span id="int-location">'+jobLocation+'</span></p>'+
+                          '<h5 class="alert-heading">Job Title:<strong><span id="int-title">'+post.title+'</span></strong></h5>'+
+                          '<p>Company name: <span id="int-comp-name">'+post.companyName+'</span></p>'+
+                          '<p>Location: <span id="int-location">'+post.location+'</span></p>'+
                           '<p> Skills Required'+
                           '<ul>'+
                           '<span id="int-skills">'+jbSkillListElement+'</span>'+
                           '</ul>'+
                           '</p>'+
-                          '<p>Additional skills: <span id="int-add-skills">'+moreJbSkills+'</span></p>'+
-                          '<p>Description: <span id="int-post-desc">'+jobDescription+'</span></p>'+
-                          '<p>Work condition: <span id="int-condition">'+jobCondition+'</span></p>'+
-
+                          '<p>Additional skills: <span id="int-add-skills">'+post.moreJbSkills+'</span></p>'+
+                          '<p>Description: <span id="int-post-desc">'+post.description+'</span></p>'+
+                          '<p>Work condition: <span id="int-condition">'+post.condition+'</span></p>'+
 
                           '<div class="flx-btn">'+
                           '<button type="button" class="apply">Apply For A Job</button>'+
@@ -115,20 +128,20 @@ var posting =function(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDe
   }
 
 
-  else if (difficulty === "advanced"){
+  else if (post.difficulty === "advanced"){
     $(".adv-level").append('<div class="adv-level">'+
                           '<div class="alert alert-info">'+
-                          '<h5 class="alert-heading">Job Title: <strong><span id="adv-title">'+jobTitle+'</span></strong></h5>'+
-                          '<p>Company name: <span id="adv-comp-name">'+comName+'</span></p>'+
-                          '<p>Location: <span id="adv-location">'+jobLocation+'</span></p>'+
+                          '<h5 class="alert-heading">Job Title: <strong><span id="adv-title">'+post.title+'</span></strong></h5>'+
+                          '<p>Company name: <span id="adv-comp-name">'+post.companyName+'</span></p>'+
+                          '<p>Location: <span id="adv-location">'+post.location+'</span></p>'+
                           '<p> Skills Required'+
                           '<ul>'+
                           '<span id="adv-skills">'+jbSkillListElement+'</span>'+
                           '</ul>'+
                           '</p>'+
-                          '<p>Additional skills: <span id="adv-add-skills">'+moreJbSkills+'</span></p>'+
-                          '<p>Description: <span id="adv-post-desc">'+jobDescription+'</span></p>'+
-                          '<p>Work condition: <span id="adv-condition">'+jobCondition+'</span></p>'+
+                          '<p>Additional skills: <span id="adv-add-skills">'+post.moreJbSkills+'</span></p>'+
+                          '<p>Description: <span id="adv-post-desc">'+post.description+'</span></p>'+
+                          '<p>Work condition: <span id="adv-condition">'+post.condition+'</span></p>'+
 
 
                           '<div class="flx-btn">'+
@@ -138,6 +151,9 @@ var posting =function(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDe
                         '</div>');
   }
 }
+var devsArray = new Developers();
+var developer1 ;
+var posts = new JobPosts();
 
 $(document).ready(function()  {
 var newpost;
@@ -145,8 +161,6 @@ var newpost;
  ///developer click function to take form inputs
  $("#app-btn").click(function(event){
    event.preventDefault();
-   var devsArray = new Developers();
-   var developer1 = new Developer();
 
    var fname,lname,email,title,hourlyRate,experience;
    var appSkills =[];
@@ -155,24 +169,16 @@ var newpost;
    title = $("input#app-title").val();
    hourlyRate = parseInt($("input#app-rate").val());
    experience = $("input#app-exp").val();
-   developer1.appSkills=[];
+  developer1 = new Developer(fName,lName,title,hourlyRate,experience);
 
    $("input:checkbox[name=app-skills]:checked").each(function(){
-       appSkillListElement += "<li>" + $(this).val() + "</li>";
-       $("#app-skills").text(appSkillListElement);
-       developer1.appSkills.push($(this).val());
+       developer1.devSkills.push($(this).val());
     });
 
-  developer1.fName = fName;
-  developer1.lName = lName;
-  developer1.title = title;
-  developer1.hourlyRate = hourlyRate;
-  developer1.experience = experience;
-  developer1.appSkills = appSkills;
-
-
+ console.log(developer1.devSkills);
+ console.log(developer1);
   devsArray.addDeveloper(developer1);
-  console.log(devsArray);
+  console.log(devsArray.devs);
   textInfo(developer1);
 
   $(".app-form").hide();
@@ -200,10 +206,10 @@ var newpost;
     var jobCondition = $("#condition").val();
     var jobDescription = $("#description").val();
     var moreJbSkills =  $("#more-jb-skills").val();
-    var jbSkills;
+    var jbSkills=[];
      newPost = new JobPosting(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDescription,jbSkills,moreJbSkills);
    // cName = newPost.comName;
-    // console.log(newPost);
+    console.log(newPost);
     newPost.jbSkills = [];
      jbSkillListElement = "";
     $("input:checkbox[name=job-skills]:checked").each(function(){
@@ -212,8 +218,9 @@ var newpost;
    });
 
 
-   posting(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDescription,moreJbSkills);
-   jobTextInfo(comName,jobTitle,difficulty,jobLocation,jobCondition,jobDescription,moreJbSkills);
+   posting(newPost);
+   posts.addJobPosting(newPost);
+   console.log(posts);
    $(".apply").click(function(){
      $(".app-form").show();
      $(".jumbotron").hide();
@@ -232,6 +239,15 @@ var newpost;
 
   }); //for the post click
 
+  $("#apply").click(function(){
+    $(".app-form").show();
+    $(".jumbotron").hide();
+    $(".interface").hide();
+    $(".post-form").hide();
+    $(".developer-info").hide();
+    reset();
+  });
+
   $("#posting-btn").click(function(){
     $(".post-form").show();
     $(".jumbotron").hide();
@@ -240,9 +256,5 @@ var newpost;
     $(".developer-info").hide();
 
   });
-
-
-
-
 
 });
